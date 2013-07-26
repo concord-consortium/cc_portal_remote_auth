@@ -23,7 +23,7 @@ module CcPortalRemoteAuth
   Warden::Manager.before_logout do |user, warden, options|
     cookies = warden.cookies
     if cookies.kind_of? ActionDispatch::Cookies::CookieJar
-      cookies.delete(CCCookieAuth.cookie_name.to_sym, {:domain => cookie_domain})
+      cookies.delete(CCCookieAuth.cookie_name.to_sym, {:domain => cookie_domain(warden.request)})
     else
       cookies.delete CCCookieAuth.cookie_name.to_sym
     end
@@ -31,9 +31,9 @@ module CcPortalRemoteAuth
 
   def self.cookie_domain(request)
     # use wildcard domain (last two parts ".concord.org") for this cookie
-    cookie_domain = request.host
-    cookie_domain = '.concord.org' if cookie_domain =~ /\.concord\.org$/
+    domain = request.host
+    domain = '.concord.org' if domain =~ /\.concord\.org$/
 
-    return cookie_domain
+    return domain
   end
 end
