@@ -23,8 +23,8 @@ class RemoteAuthController < ApplicationController
           offerings = c.offerings
           offerings = offerings.select{|o| o.active && o.runnable.is_a?(ExternalActivity)}
           offerings = offerings.select{|o|
-            runnable_url = o.runnable.url.gsub(/\/\s*$/,'')
-            save_path = o.runnable.save_path.gsub(/\/\s*$/,'')
+            runnable_url = o.runnable.url.gsub(/\/\s*$/,'') rescue nil
+            save_path = o.runnable.save_path.gsub(/\/\s*$/,'') rescue nil
             referrer = request.referrer.gsub(/\/\s*$/,'')
             town_level_referrer = referrer.gsub(/(\?task=(?:baseline\/)?\d+)\/\d+$/) {|m| $1 }
             runnable_url == referrer || save_path == referrer || save_path == town_level_referrer
