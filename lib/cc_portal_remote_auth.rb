@@ -13,7 +13,9 @@ module CcPortalRemoteAuth
     alias_method_chain :params_auth_hash, :remote
   end
 
-  Warden::Manager.after_authentication do |user, warden, options|
+  # after_authentication appears to not be called when a user follows the
+  # confirmation link, but after_set_user should be called in that case
+  Warden::Manager.after_set_user do |user, warden, options|
     cookies = warden.cookies
     request = warden.request
     token = CCCookieAuth.make_auth_token(user.login, request.remote_ip)
